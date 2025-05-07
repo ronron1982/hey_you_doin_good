@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>hey_you_doin_good?</title>
+  <style>
+    body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to bottom, #f0f8ff, #e6f2ff);
+  margin: 0;
+  padding: 0;
+  color: #333;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+    .left-section {
+  width: 200px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+    .left-section h1 {
+      font-size: 22px;
+      color: #2c3e50;
+      margin-bottom: 10px;
+    }
+    .left-section p {
+      font-size: 14px;
+      color: #666;
+    }
+    .left-section img {
+      margin-top: 10px;
+      width: 150px;
+      height: 150px;
+    }
+    .center-section {
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+    .center-section h1 {
+      color: #2c3e50;
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    .center-section h2.subtitle {
+      color: #555;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+    #wheel-container {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      margin: 0 auto 20px;
+    }
+    #wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 8px solid #444;
+      background: conic-gradient(
+        red 0deg 45deg,
+        orange 45deg 90deg,
+        yellow 90deg 135deg,
+        green 135deg 180deg,
+        blue 180deg 225deg,
+        purple 225deg 270deg,
+        black 270deg 315deg,
+        white 315deg 360deg
+      );
+      transition: transform 6s cubic-bezier(0.33, 1, 0.68, 1);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      transform: rotate(0deg);
+    }
+    #arrow {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-bottom: 20px solid #ff4500;
+    }
+    #spin {
+      margin-top: 20px;
+      font-size: 18px;
+      padding: 10px 20px;
+      background: #3498db;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    #spin:hover {
+      background: #2980b9;
+    }
+    #result {
+  position: fixed;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 300px;
+  font-size: 18px;
+  line-height: 1.6;
+  padding: 20px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #333;
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  z-index: 999;
+}
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .mood-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  #result.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (max-width: 1024px) {
+  body {
+    flex-direction: column;
+    height: auto;
+    padding: 20px;
+  }
+  .left-section, .center-section, #result {
+    position: static !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 90vw;
+    margin: 10px auto;
+  }
+  #result {
+    order: 3;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="left-section">
+    <h1>📸 Follow us</h1>
+    <p>Instagram: <strong>@hey_you_doin_good</strong></p>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?data=https%3A%2F%2Fwww.instagram.com%2Fhey_you_doin_good%2F&size=150x150" alt="Instagram QR Code">
+    <p style="font-size: 12px; color: #888;">&copy; 2025 Raymond Lee</p>
+  </div>
+
+  <div class="center-section">
+    <h1>hey_you_doin_good?</h1>
+    <h2 class="subtitle">Spin the wheel and discover your current mood — with guidance to take care of yourself 🌈</h2>
+    <div id="wheel-container">
+      <div id="arrow"></div>
+      <div id="wheel"></div>
+    </div>
+    <button id="spin">🎯 Spin the Wheel</button>
+  </div>
+
+  <div id="result"></div>
+
+  <script>
+    const wheel = document.getElementById("wheel");
+    const resultDiv = document.getElementById("result");
+    let currentRotation = 0;
+
+    const moods = [
+      { name: "Red", mood: "❤️ Passionate & Energetic", advice: "You're radiating fire and intensity! 🔥 Use your energy to create something beautiful, whether it's art, music, or action. Let your boldness inspire others.", color: "#ff0000", textColor: "#fff" },
+      { name: "Orange", mood: "🧡 Creative & Social", advice: "Your ideas are flowing and you're glowing! ✨ Collaborate, brainstorm, and bring people together — the world needs your imagination.", color: "#ffa500", textColor: "#222" },
+      { name: "Yellow", mood: "💛 Happy & Optimistic", advice: "Sunshine in your soul! ☀️ Share your light generously and fuel others with your joy. Write it down, dance it out, or give a hug.", color: "#ffff00", textColor: "#222" },
+      { name: "Green", mood: "💚 Calm & Balanced", advice: "You're in sync with life 🌿. Take a deep breath, enjoy the moment, and keep this beautiful balance by grounding yourself in nature or meditation.", color: "#32cd32", textColor: "#fff" },
+      { name: "Blue", mood: "💙 Peaceful or Reflective", advice: "You're embracing quiet clarity 🌊. Write in a journal, take a walk by the water, or talk gently with someone you trust.", color: "#1e90ff", textColor: "#fff" },
+      { name: "Purple", mood: "💜 Imaginative & Mysterious", advice: "You're in your own magical world ✨. Let it flourish. Paint, dream, write — and don’t feel pressured to explain your beauty.", color: "#800080", textColor: "#fff" },
+      { name: "Black", mood: "🖤 Strong & Deep", advice: "You carry powerful emotions and insight 🧠. Channel it wisely. Rest, focus, and rise with strength others admire silently.", color: "#000000", textColor: "#eee" },
+      { name: "White", mood: "🤍 Clear & Fresh", advice: "A clean slate 🌸! Embrace simplicity. Start something new — tidy your space, your mind, or your schedule with gentle confidence.", color: "#ffffff", textColor: "#333" }
+    ];
+
+    document.getElementById("spin").addEventListener("click", () => {
+      const extraDegrees = Math.floor(Math.random() * 360 + 1800); // longer spin
+      currentRotation += extraDegrees;
+      wheel.style.transform = `rotate(${currentRotation}deg)`;
+
+      const segment = 360 / moods.length;
+      const normalizedDegrees = currentRotation % 360;
+      const index = Math.floor((360 - normalizedDegrees + segment / 2) % 360 / segment);
+      const mood = moods[index];
+
+      setTimeout(() => {
+  resultDiv.classList.remove("show");
+  void resultDiv.offsetWidth;
+        resultDiv.style.display = 'block'; resultDiv.classList.remove('fade-in'); void resultDiv.offsetWidth; resultDiv.classList.add('fade-in');
+        resultDiv.style.backgroundColor = mood.color;
+        resultDiv.style.color = mood.textColor;
+        resultDiv.innerHTML = `
+    <div class=\"mood-title\">${mood.mood}</div>
+    <p>${mood.advice}</p>
+  `;
+  resultDiv.style.backgroundColor = mood.color;
+  resultDiv.style.color = mood.textColor;
+  resultDiv.classList.add("show");
+      }, 6200);
+    });
+  </script>
+</body>
+</html>
