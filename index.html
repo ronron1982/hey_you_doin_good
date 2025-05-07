@@ -287,10 +287,19 @@
       currentRotation += extraDegrees;
       wheel.style.transform = `rotate(${currentRotation}deg)`;
 
-      const segment = 360 / moods.length;
-      const normalizedDegrees = currentRotation % 360;
-      const index = Math.floor((360 - normalizedDegrees + segment / 2) % 360 / segment);
-      const mood = moods[index];
+      // 修正指針位置計算邏輯
+      // 當轉盤順時針旋轉時，指針相對於轉盤是逆時針移動
+      const segment = 45; // 每個顏色佔45度 (360/8)
+      
+      // 標準化角度並且反向計算（因為轉盤順時針旋轉，但我們需要逆時針找顏色）
+      const normalizedDegrees = (360 - (currentRotation % 360)) % 360;
+      
+      // 計算指針指向的顏色索引
+      const index = Math.floor(normalizedDegrees / segment);
+      
+      // 確保索引在有效範圍內
+      const safeIndex = index % moods.length;
+      const mood = moods[safeIndex];
 
       setTimeout(() => {
         resultDiv.style.backgroundColor = mood.color;
@@ -301,6 +310,9 @@
         `;
         resultDiv.classList.add("show");
       }, 6200);
+      
+      // 用於除錯
+      console.log(`旋轉角度: ${currentRotation}度, 標準化角度: ${normalizedDegrees}度, 索引: ${safeIndex}, 顏色: ${mood.name}`);
     });
   </script>
 </body>
