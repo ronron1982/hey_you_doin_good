@@ -6,71 +6,82 @@
   <title>hey_you_doin_good?</title>
   <style>
     body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(to bottom, #f0f8ff, #e6f2ff);
-  margin: 0;
-  padding: 0;
-  color: #333;
-  height: 100vh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  box-sizing: border-box;
-}
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom, #f0f8ff, #e6f2ff);
+      margin: 0;
+      padding: 0 20px;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center; /* 改為中央對齊，讓整個內容居中 */
+      box-sizing: border-box;
+      overflow-x: hidden;
+      position: relative;
+    }
+    
     .left-section {
-  width: 200px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  padding: 0 10px;
-  box-sizing: border-box;
-}
+      width: 180px;
+      text-align: center;
+      flex-shrink: 0;
+      margin-top: -60px; /* 向上移動一點，減少頂部空間 */
+      margin-right: 20px; /* 增加與中央區塊的間距 */
+    }
+    
     .left-section h1 {
       font-size: 22px;
       color: #2c3e50;
-      margin-bottom: 10px;
+      margin: 0 0 10px 0; /* 移除頂部外邊距 */
     }
+    
     .left-section p {
       font-size: 14px;
       color: #666;
+      margin: 5px 0;
     }
+    
     .left-section img {
       margin-top: 10px;
-      width: 150px;
-      height: 150px;
+      width: 140px;
+      height: 140px;
     }
+    
     .center-section {
-  text-align: center;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  padding: 0 20px;
-  box-sizing: border-box;
-}
+      text-align: center;
+      margin-left: 0; /* 移除左側邊距，確保居中 */
+      margin-top: -60px; /* 向上移動一點，減少頂部空間 */
+      display: flex;
+      flex-direction: column;
+      align-items: center; /* 確保內容水平居中 */
+      width: auto; /* 讓寬度根據內容自動調整 */
+    }
+    
     .center-section h1 {
       color: #2c3e50;
       font-size: 32px;
+      margin-top: 0; /* 移除頂部外邊距 */
       margin-bottom: 10px;
+      text-align: center; /* 確保文字居中 */
+      width: 100%; /* 確保標題佔滿寬度 */
     }
+    
     .center-section h2.subtitle {
       color: #555;
       font-size: 18px;
-      margin-bottom: 30px;
+      margin-top: 0;
+      margin-bottom: 20px;
+      max-width: 500px; /* 限制文字寬度 */
+      text-align: center; /* 確保副標題文字居中 */
     }
+    
     #wheel-container {
       position: relative;
-      width: 320px;
-      height: 320px;
+      width: 300px;
+      height: 300px;
       margin: 0 auto 20px;
     }
+    
     #wheel {
       width: 100%;
       height: 100%;
@@ -90,6 +101,7 @@
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
       transform: rotate(0deg);
     }
+    
     #arrow {
       position: absolute;
       top: -20px;
@@ -100,7 +112,9 @@
       border-left: 20px solid transparent;
       border-right: 20px solid transparent;
       border-bottom: 20px solid #ff4500;
+      z-index: 2;
     }
+    
     #spin {
       margin-top: 20px;
       font-size: 18px;
@@ -112,26 +126,38 @@
       cursor: pointer;
       transition: background 0.3s ease;
     }
+    
     #spin:hover {
       background: #2980b9;
     }
+    
+    .main-content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 1200px;
+      gap: 40px;
+    }
+    
     #result {
-  position: fixed;
-  right: 40px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 300px;
-  font-size: 18px;
-  line-height: 1.6;
-  padding: 20px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.95);
-  color: #333;
-  opacity: 0;
-  transition: opacity 0.8s ease, transform 0.8s ease;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  z-index: 999;
-}
+      width: 300px;
+      font-size: 18px;
+      line-height: 1.6;
+      padding: 20px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #333;
+      opacity: 0;
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      z-index: 10;
+      margin-top: 20px;
+      align-self: flex-start;
+    }
+    
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -142,33 +168,75 @@
         transform: translateY(0);
       }
     }
+    
     .mood-title {
       font-size: 24px;
       font-weight: bold;
       margin-bottom: 10px;
     }
-  #result.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-@media (max-width: 1024px) {
-  body {
-    flex-direction: column;
-    height: auto;
-    padding: 20px;
-  }
-  .left-section, .center-section, #result {
-    position: static !important;
-    transform: none !important;
-    width: 100% !important;
-    max-width: 90vw;
-    margin: 10px auto;
-  }
-  #result {
-    order: 3;
-  }
-}
-</style>
+    
+    #result.show {
+      opacity: 1;
+      animation: fadeInUp 0.5s ease-out forwards;
+    }
+    
+    /* 媒體查詢 - 適應不同螢幕大小 */
+    @media (max-width: 1024px) {
+      body {
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 30px 20px;
+        height: auto;
+        overflow-y: auto;
+      }
+      
+      .left-section, .center-section {
+        margin-top: 0;
+        width: 100%;
+        margin-left: 0;
+        margin-right: 0; /* 確保在小螢幕上沒有右側邊距 */
+      }
+      
+      .left-section {
+        margin-bottom: 40px;
+      }
+      
+      .main-content {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      #result {
+        width: 90%;
+        max-width: 400px;
+        margin: 30px auto;
+      }
+      
+      #wheel-container {
+        width: 280px;
+        height: 280px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      body {
+        padding: 20px 10px;
+      }
+      
+      .center-section h1 {
+        font-size: 28px;
+      }
+      
+      .center-section h2.subtitle {
+        font-size: 16px;
+      }
+      
+      #wheel-container {
+        width: 240px;
+        height: 240px;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="left-section">
@@ -181,14 +249,19 @@
   <div class="center-section">
     <h1>hey_you_doin_good?</h1>
     <h2 class="subtitle">Spin the wheel and discover your current mood — with guidance to take care of yourself 🌈</h2>
-    <div id="wheel-container">
-      <div id="arrow"></div>
-      <div id="wheel"></div>
+    
+    <div class="main-content">
+      <div>
+        <div id="wheel-container">
+          <div id="arrow"></div>
+          <div id="wheel"></div>
+        </div>
+        <button id="spin">🎯 Spin the Wheel</button>
+      </div>
+      
+      <div id="result"></div>
     </div>
-    <button id="spin">🎯 Spin the Wheel</button>
   </div>
-
-  <div id="result"></div>
 
   <script>
     const wheel = document.getElementById("wheel");
@@ -201,13 +274,16 @@
       { name: "Yellow", mood: "💛 Happy & Optimistic", advice: "Sunshine in your soul! ☀️ Share your light generously and fuel others with your joy. Write it down, dance it out, or give a hug.", color: "#ffff00", textColor: "#222" },
       { name: "Green", mood: "💚 Calm & Balanced", advice: "You're in sync with life 🌿. Take a deep breath, enjoy the moment, and keep this beautiful balance by grounding yourself in nature or meditation.", color: "#32cd32", textColor: "#fff" },
       { name: "Blue", mood: "💙 Peaceful or Reflective", advice: "You're embracing quiet clarity 🌊. Write in a journal, take a walk by the water, or talk gently with someone you trust.", color: "#1e90ff", textColor: "#fff" },
-      { name: "Purple", mood: "💜 Imaginative & Mysterious", advice: "You're in your own magical world ✨. Let it flourish. Paint, dream, write — and don’t feel pressured to explain your beauty.", color: "#800080", textColor: "#fff" },
+      { name: "Purple", mood: "💜 Imaginative & Mysterious", advice: "You're in your own magical world ✨. Let it flourish. Paint, dream, write — and don't feel pressured to explain your beauty.", color: "#800080", textColor: "#fff" },
       { name: "Black", mood: "🖤 Strong & Deep", advice: "You carry powerful emotions and insight 🧠. Channel it wisely. Rest, focus, and rise with strength others admire silently.", color: "#000000", textColor: "#eee" },
       { name: "White", mood: "🤍 Clear & Fresh", advice: "A clean slate 🌸! Embrace simplicity. Start something new — tidy your space, your mind, or your schedule with gentle confidence.", color: "#ffffff", textColor: "#333" }
     ];
 
     document.getElementById("spin").addEventListener("click", () => {
-      const extraDegrees = Math.floor(Math.random() * 360 + 1800); // longer spin
+      // 隱藏先前的結果
+      resultDiv.classList.remove("show");
+      
+      const extraDegrees = Math.floor(Math.random() * 360 + 1800); // 延長旋轉時間
       currentRotation += extraDegrees;
       wheel.style.transform = `rotate(${currentRotation}deg)`;
 
@@ -217,18 +293,13 @@
       const mood = moods[index];
 
       setTimeout(() => {
-  resultDiv.classList.remove("show");
-  void resultDiv.offsetWidth;
-        resultDiv.style.display = 'block'; resultDiv.classList.remove('fade-in'); void resultDiv.offsetWidth; resultDiv.classList.add('fade-in');
         resultDiv.style.backgroundColor = mood.color;
         resultDiv.style.color = mood.textColor;
         resultDiv.innerHTML = `
-    <div class=\"mood-title\">${mood.mood}</div>
-    <p>${mood.advice}</p>
-  `;
-  resultDiv.style.backgroundColor = mood.color;
-  resultDiv.style.color = mood.textColor;
-  resultDiv.classList.add("show");
+          <div class="mood-title">${mood.mood}</div>
+          <p>${mood.advice}</p>
+        `;
+        resultDiv.classList.add("show");
       }, 6200);
     });
   </script>
